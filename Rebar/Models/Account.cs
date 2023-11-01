@@ -2,25 +2,30 @@
 {
     public class Account
     {
-        private List<Order> _orders = null!;
-        private int _sumOrders ;
+        public List<Order> Orders { get; set; }
 
-        public List<Order> Orders
+        public int SumOrders { get; set; }
+
+        public Account(List<Order> orders)
         {
-            get { return _orders; }
-            set { _orders = value; }
+            this.Orders = orders;
+
+            foreach (var order in orders)
+            {
+                this.SumOrders += order.Sum;
+            }
+
         }
 
-        public int SumOrders
+        public override string ToString()
         {
-            get { return _sumOrders; }
-            set { _sumOrders = value; }
-        }
+            string ordersInfo = null!;
+            foreach (var order in Orders)
+            {
+                ordersInfo += order.ToString() + "\n";
+            }
 
-        public Account()
-        {
-            Orders = new List<Order> { };
-            SumOrders = 0;
+            return "Account Information:\n" + ordersInfo + "Sum orders: " + this.SumOrders + "\n";
         }
     }
 }

@@ -1,79 +1,60 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using ThirdParty.Json.LitJson;
 
 namespace Rebar.Models
 {
+    public record Shakes(Shake Shake, string size, int price);
+    
     public class Order
     {
-        [BsonElement("shakes_list")]
-        private List<Shake> _shakes = null!;
+        [BsonId]
+        //[BsonRepresentation(BsonType.Decimal128)]
+        public Guid Id { get; set; }
+
+        [BsonElement("shakes")]
+        public Shakes Shakes { get; set; }
+        
 
         [BsonElement("sum")]
-        private int _sum;
-
-        [BsonGuidRepresentation(GuidRepresentation.Standard)]
-        private Guid id;
+        public int Sum { get; set; }
 
         [BsonElement("coustomer_name")]
-        private string _customerName = null!;
+        public string CustomerName { get; set; }
 
         [BsonElement("date")]
-        private DateTime _date;
+        public DateTime Date { get; set; }
 
         [BsonElement("discount")]
-        private List<Discount> _discount = null!; 
+        public List<Discount> Discounts { get; set; } 
 
-        public List<Shake> Shakes
+
+        public Order(Shakes shakes, string customerName, List<Discount> discounts)
         {
-            get { return _shakes; }
-            set { _shakes = value; }
-        }
-
-        public int Sum
-        {
-            get { return _sum; }
-            set { _sum = value; }
-        }
-
-        public Guid Id
-        {
-            get { return id; }
-        }
-
-        public string CustomerName
-        {
-            get { return _customerName; }
-            set { _customerName = value; }
-        }
-
-        public DateTime Date
-        {
-            get { return _date; }
-            set { _date = value; }
-        }
-
-        public List<Discount> Discount
-        {
-            get { return _discount; }
-            set { _discount = value; }
-        }
-
-        public Order(List<Shake> shakes, string customerName, List<Discount> discount)
-        {
-            this.id = new Guid();
-
-            if (customerName.All(Char.IsLetter))
-                this.CustomerName = customerName;
-            else
-                throw new ArithmeticException("The customer name is invalid!");
-
+            this.Id = Guid.NewGuid();
             this.Shakes = shakes;
-
-            this.Date = DateTime.Now;   
-
-            this.Discount = discount;
-
+            this.CustomerName = customerName;
+            this.Date = DateTime.Now;
+            this.Discounts = discounts;
         }
+
+        //public override string ToString()
+        //{
+        //    string shakesInfo = null!;
+        //    foreach (var shake in Shakes)
+        //    {
+        //        shakesInfo += shake.ToString() + "\n";
+        //    }
+
+        //    string discountsInfo = null!;
+        //    foreach (var discount in Discounts)
+        //    {
+        //        discountsInfo += discount.ToString() + "\n";
+        //    }
+
+        //    return "Order Information:\nId: " + this.Id + "\n" + shakesInfo + "Customer Name: " + this.CustomerName + "\nDate: " + this.Date + "\n" + discountsInfo;
+        //}
 
     }
 }
