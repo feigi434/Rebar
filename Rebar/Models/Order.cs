@@ -10,11 +10,10 @@ namespace Rebar.Models
     public class Order
     {
         [BsonId]
-        //[BsonRepresentation(BsonType.Decimal128)]
         public Guid Id { get; set; }
 
         [BsonElement("shakes")]
-        public Shakes Shakes { get; set; }
+        public List<Shakes> Shakes { get; set; }
         
 
         [BsonElement("sum")]
@@ -30,7 +29,7 @@ namespace Rebar.Models
         public List<Discount> Discounts { get; set; } 
 
 
-        public Order(Shakes shakes, string customerName, List<Discount> discounts)
+        public Order(List<Shakes> shakes, string customerName, List<Discount> discounts)
         {
             this.Id = Guid.NewGuid();
             this.Shakes = shakes;
