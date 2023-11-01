@@ -39,6 +39,11 @@ namespace Rebar.Controllers
         [HttpPost]
         public ActionResult<Shake> Post([FromBody] Shake shake)
         {
+            if(!shake.Name.All(char.IsLetter) || shake.Name == "")
+                return BadRequest("Shake name is invalid!");
+            if (shake.Description == "")
+                return BadRequest("shake description is invalid!");
+           
             shakeService.Create(shake);
 
             return CreatedAtAction(nameof(Get), new { id = shake.Id }, shake);
