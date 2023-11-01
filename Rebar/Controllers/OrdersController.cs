@@ -39,9 +39,20 @@ namespace Rebar.Controllers
         [HttpPost]
         public ActionResult<Order> Post([FromBody] Order order)
         {
-            orderService.Create(order);
+            if (order.Shakes == null || order.CustomerName == null || order.Discounts == null)
+                return BadRequest("All properties are required!");
+            else if (order.Shakes.Count() > 10 || order.Shakes.Count() < 0)
+                return BadRequest("Shakes list invalid!");
+            else if (!order.CustomerName.All(char.IsLetter))
+                return BadRequest("Customer name invalid!");
+            else
+                foreach (var shake in order.Shakes) 
+                    order.Sum += shake.price;
+            order.Date = DateTime.Now;
 
-            return CreatedAtAction(nameof(Get), new { id = order.Id }, order);
+
+            orderService.Create(order);
+            return Ok($"Order with id = {order.Id} created successfully");
         }
 
 
